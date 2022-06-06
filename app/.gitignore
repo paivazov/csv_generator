@@ -1,0 +1,4 @@
+*.zip
+.idea/
+.coverage
+.mypy_cache

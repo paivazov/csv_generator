@@ -1,0 +1,28 @@
+version: '3.4'
+
+volumes:
+  pip_cache:
+  virtual_environment:
+
+services:
+  application:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: make dev-server
+    environment:
+      - PYTHONPATH=/app
+      # Setting the non-empty value of PYTHONUNBUFFERED means that the python
+      # output is transmitted directly to the terminal without being buffered
+      # and that allows displaying the application’s output in real-time.
+      # It also means that there is no partial output in a buffer in case
+      # the python program fails.
+      - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-planeks_csv_generator.settings.local}
+      - DJANGO_HOST=${DJANGO_HOST:-0.0.0.0:8000}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app:delegated
+      - pip_cache:/root/.cache/pip:delegated
+      - virtual_environment:/opt/planeks:delegated
