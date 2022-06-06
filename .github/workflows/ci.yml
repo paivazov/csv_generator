@@ -50,6 +50,7 @@ jobs:
         working-directory: ./app
         run: |
           python -m pip install --upgrade pip
-          make dev-requirements coverage
+           make dev-requirements pytest
+#          make dev-requirements coverage
         env:
           DJANGODB_URL: postgres://dj_user:dj_pass123@localhost/djangodb
