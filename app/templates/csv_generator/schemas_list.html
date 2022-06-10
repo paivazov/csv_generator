@@ -1,0 +1,10 @@
+{% extends "csv_generator/base.html" %}
+
+{% block content %}
+{% for schema in object_list %}
+        <li>{{ schema.name }}</li>
+{% empty %}
+    <li>No schemas yet.</li>
+{% endfor %}
+
+{% endblock %}

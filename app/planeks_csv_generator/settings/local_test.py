@@ -8,5 +8,7 @@ LOCAL_LOGIN = True
 
 # Set DJANGODB_URL='postgres://<user>@<host>/<db_name>' for postgres
 DATABASES = {
-    'default': db_config(default='sqlite:///:memory:'),
+    'default': db_config(
+        env=DJANGODB_URL, default='sqlite:///:memory:'  # noqa: F405
+    ),
 }
