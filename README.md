@@ -1,4 +1,4 @@
-### CSV Generator project
+# CSV Generator project
 ___
 
 ## First run
