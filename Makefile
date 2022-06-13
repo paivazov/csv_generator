@@ -59,7 +59,7 @@ format_app:
 
 migrations:
 	$(DOCKER) up -d postgres
-	$(DOCKER) run --rm api make migrations
+	$(DOCKER) run --rm application make migrations
 	$(DOCKER) stop postgres
 
 load_data:
