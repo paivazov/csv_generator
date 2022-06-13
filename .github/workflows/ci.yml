@@ -47,7 +47,7 @@ jobs:
           psql -c 'ALTER SYSTEM SET synchronous_commit=off;'
           psql -c 'ALTER SYSTEM SET full_page_writes=off;'
       - name: api-tests
-        working-directory: ./app
+        working-directory: app
         run: |
           python -m pip install --upgrade pip
            make dev-requirements quicktest
