@@ -39,7 +39,7 @@ test: test_app
 
 
 test_app:
-	$(DOCKER) run --rm application make pytest
+	$(DOCKER) run --rm application make quicktest
 
 
 .PHONY: check_full check check_ui check_app format_app
