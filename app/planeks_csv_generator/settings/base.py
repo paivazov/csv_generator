@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'crispy_forms',
-    # 'crispy_tailwind',
-    # "planeks_csv_generator.login",
-    # "planeks_csv_generator.csv_generator",
+    'crispy_forms',
+    'crispy_tailwind',
+    "planeks_csv_generator.login",
+    "planeks_csv_generator.csv_generator",
 ]
 
 MIDDLEWARE = [
