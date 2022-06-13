@@ -1,13 +1,18 @@
+import time
+
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.transaction import atomic
 from django.forms import formset_factory
-from django.http import HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.template.loader import get_template
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import FormView, ListView, CreateView
+from django.views.generic import FormView, ListView, CreateView, DetailView
 import csv
 
 from planeks_csv_generator.books.forms import BookForm
@@ -16,37 +21,16 @@ from planeks_csv_generator.csv_generator.forms import DataSetForm, DataColumnFor
 from planeks_csv_generator.csv_generator.models import DataSet, DataColumn
 
 
-class CreateDataSetView(FormView):
-    template_name = 'csv_generator/create_dataset.html'
-    form_class = DataSetForm
-
-    def __init__(self, **kwargs):
-        self.dataset = None
-        super().__init__(**kwargs)
-
-    def get_success_url(self):
-        return f'/schemas/create_schema/{self.dataset.id}'
-
-    def form_valid(self, form):
-        data = form.cleaned_data
-        user = self.request.user
-        if user is not None:
-            self.dataset = DataSet.objects.create(**data, user=user)
-        else:
-            return redirect("/login/")
-        return super().form_valid(form)
-
-
-class CreateSchema(View):
+class ManageSchemaView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        self.pk = pk
         columns = DataColumn.objects.filter(data_set__user=request.user)
-        datacolumn_form = DataColumnForm()
+        data_columns = DataColumn.objects.filter(data_set_id=pk)
         dataset_form = DataSetForm()
         context = {
             "dataset_form": dataset_form,
-            # "datacolumn_form": datacolumn_form,
-            "columns": columns
+            "data_columns": data_columns,
+            "columns": columns,
+            "dataset_id": pk
         }
 
         return render(request, "csv_generator/create_schema.html", context)
@@ -54,72 +38,57 @@ class CreateSchema(View):
     def post(self, request, pk):
         data_set = DataSet.objects.get(pk=pk)
         datacolumn_form = DataColumnForm(request.POST)
-        dataset_form = DataSetForm(request.POST)
 
         if datacolumn_form.is_valid():
-            data_column = datacolumn_form.save(commit=False)
-            data_column.data_set = data_set
-            data_column.save()
-            return redirect("detail-book", pk=data_column.id)
+            with atomic():
+                data_column = datacolumn_form.save(commit=False)
+                data_column.data_set = data_set
+                data_column.save()
+            context = {"column": data_column}
+            return render(request, "csv_generator/partials/book_detail.html", context=context)
         else:
-            return render(request, "csv_generator/partials/book_form.html", context={
-                "form": datacolumn_form,
-                "data_set_id": 2
-            })
+            return redirect("create-schema-form")
 
-def delete_book(request, pk):
-    book = get_object_or_404(Book, id=pk)
+    def delete(self, request, pk):
+        data_column = get_object_or_404(DataColumn, id=pk)
+        data_column.delete()
+        return HttpResponse(status=200)
 
-    if request.method == "POST":
-        book.delete()
-        return HttpResponse("")
+    def patch(self, request, pk):
+        data_column = get_object_or_404(DataColumn, id=pk)
+        form = DataColumnForm(request.POST, instance=data_column)
 
-    return HttpResponseNotAllowed(
-        [
-            "POST",
-        ]
-    )
+        if form.is_valid():
+            form.save()
+            return redirect("schema-detail", pk=data_column.id)
 
+        context = {
+            "form": form,
+            "data_column": data_column,
 
-def detail_book(request, pk):
-    book = get_object_or_404(Book, id=pk)
-    context = {
-        "book": book
-    }
-    return render(request, "book/partials/book_detail.html", context)
+        }
+
+        return render(request, "csv_generator/partials/book_form.html", context)
 
 
-def create_schema_form(request):
+class DetailColumnView(DetailView):
+    model = DataColumn
+    template_name = "csv_generator/partials/book_detail.html"
+
+
+
+
+
+def create_schema_form(request, dataset_id):
     datacolumn_form = DataColumnForm()
     context = {
-        "form": datacolumn_form
+        "form": datacolumn_form,
+        "dataset_id": dataset_id,
     }
     return render(request, "csv_generator/partials/book_form.html", context)
 
 
-def create_book(request, pk):
-    author = Author.objects.get(id=pk)
-    books = Book.objects.filter(author=author)
-    form = BookForm(request.POST or None)
 
-    if request.method == "POST":
-        if form.is_valid():
-            book = form.save(commit=False)
-            book.author = author
-            book.save()
-            return redirect("detail-book", pk=book.id)
-        else:
-            return render(request, "book/partials/book_form.html", context={
-                "form": form
-            })
-
-    context = {
-        "form": form,
-        "author": author,
-        "books": books
-    }
-
-    return render(request, "csv_generator/create_schema.html", context)
 
 
 def some_view(request):
@@ -142,8 +111,28 @@ def some_view(request):
     return response
 
 
-class SchemasListView(ListView):
-    # model = DataSchema
+class CreateDataSetView(LoginRequiredMixin, FormView):
+    template_name = 'csv_generator/create_dataset.html'
+    form_class = DataSetForm
+
+    def __init__(self, **kwargs):
+        self.dataset = None
+        super().__init__(**kwargs)
+
+    def get_success_url(self):
+        return reverse("create-schema", kwargs={"pk": self.dataset.id})
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        user = self.request.user
+        if user is not None:
+            self.dataset = DataSet.objects.create(**data, user=user)
+        else:
+            return redirect("/login/")
+        return super().form_valid(form)
+
+
+class SchemasListView(LoginRequiredMixin, ListView):
     template_name = "csv_generator/schemas_list.html"
 
     def get_queryset(self):

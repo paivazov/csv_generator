@@ -61,7 +61,7 @@ ROOT_URLCONF = 'planeks_csv_generator.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["app/templates/"],
+        'DIRS': ["templates/"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,7 +131,7 @@ USE_TZ = True
 STATIC_URL = 'app/static/'
 
 STATICFILES_DIRS = [
-    "app/static/",
+    "static/",
 
 ]
 

@@ -33,7 +33,8 @@ services:
   web-app:
     image: nginx:stable
     command: >
-      bash -c /usr/sbin/wait-for-it --timeout=0 application:8000 &&
+      bash -c '/usr/sbin/wait-for-it --timeout=0 ui:8080 &&
+        /usr/sbin/wait-for-it --timeout=0 api:8000 &&
         /usr/sbin/wait-for-it --timeout=0 postgres:5432 &&
         /usr/sbin/nginx -g "daemon off;error_log /dev/stdout info;"
       '
