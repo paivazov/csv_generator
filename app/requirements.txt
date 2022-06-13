@@ -1,19 +1,6 @@
 # packages that are imported          # package name
-celery==5.2.1
-Django==3.2.9                         # django
-dj-database-url==0.5.0                # dj_database_url
+Django==4.0.0                         # django
 psycopg2==2.9.2                       # psycopg2
-
-
-# dependencies of top-level packages  # needed by
-billiard==3.6.4.0                     # celery
-click==8.0.3                          # celery
-click-didyoumean==0.3.0               # celery
-click-plugins==1.1.1                  # celery
-click-repl==0.2.0                     # celery
-kombu==5.2.2                          # celery
-pytz==2021.3                          # pytz and Django
-six==1.16.0                           # (many packages)
-sqlparse==0.4.2                       # (many packages)
-typing_extensions==4.0.0              # celery
-vine==5.0.0                           # amqp
+dj-database-url==0.5.0                # dj_database_url
+crispy-tailwind==0.5.0
+django-crispy-forms==1.12.0
