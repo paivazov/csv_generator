@@ -41,9 +41,8 @@ INSTALLED_APPS = [
     "planeks_csv_generator.books",
     'crispy_forms',
     'crispy_tailwind',
-    # "planeks_csv_generator.login",
+    "planeks_csv_generator.login",
     "planeks_csv_generator.csv_generator",
-    # "planeks_csv_generator.recipes"
 ]
 
 MIDDLEWARE = [
