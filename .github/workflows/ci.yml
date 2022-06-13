@@ -54,3 +54,4 @@ jobs:
 #          make dev-requirements coverage
         env:
           DJANGODB_URL: postgres://dj_user:dj_pass123@localhost/djangodb
+          DJANGO_SETTINGS_MODULE: planeks_csv_generator.settings.local
