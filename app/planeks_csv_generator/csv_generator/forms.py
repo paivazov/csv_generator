@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CharField, Form
+from django.forms import ModelForm
 
 from planeks_csv_generator.csv_generator.models import DataSet, DataColumn
 
@@ -6,11 +6,7 @@ from planeks_csv_generator.csv_generator.models import DataSet, DataColumn
 class DataSetForm(ModelForm):
     class Meta:
         model = DataSet
-        fields = (
-            'name',
-            "string_character",
-            "line_separator"
-        )
+        fields = ('name', "string_character", "line_separator")
 
 
 class DataColumnForm(ModelForm):

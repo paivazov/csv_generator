@@ -1,24 +1,17 @@
-import time
-
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.transaction import atomic
-from django.forms import formset_factory
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
-from django.template.loader import get_template
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_protect
-from django.views.generic import FormView, ListView, CreateView, DetailView
-import csv
+from django.views.generic import FormView, ListView, DetailView
 
-from planeks_csv_generator.books.forms import BookForm
-from planeks_csv_generator.books.models import Author, Book
-from planeks_csv_generator.csv_generator.forms import DataSetForm, DataColumnForm
 from planeks_csv_generator.csv_generator.models import DataSet, DataColumn
+from planeks_csv_generator.csv_generator.forms import (  # noqa
+    DataColumnForm,
+    DataSetForm,
+)
 
 
 class ManageSchemaView(LoginRequiredMixin, View):
@@ -30,7 +23,7 @@ class ManageSchemaView(LoginRequiredMixin, View):
             "dataset_form": dataset_form,
             "data_columns": data_columns,
             "columns": columns,
-            "dataset_id": pk
+            "dataset_id": pk,
         }
 
         return render(request, "csv_generator/create_schema.html", context)
@@ -45,7 +38,11 @@ class ManageSchemaView(LoginRequiredMixin, View):
                 data_column.data_set = data_set
                 data_column.save()
             context = {"column": data_column}
-            return render(request, "csv_generator/partials/book_detail.html", context=context)
+            return render(
+                request,
+                "csv_generator/partials/book_detail.html",
+                context=context,
+            )
         else:
             return redirect("create-schema-form")
 
@@ -65,18 +62,16 @@ class ManageSchemaView(LoginRequiredMixin, View):
         context = {
             "form": form,
             "data_column": data_column,
-
         }
 
-        return render(request, "csv_generator/partials/book_form.html", context)
+        return render(
+            request, "csv_generator/partials/book_form.html", context
+        )
 
 
 class DetailColumnView(DetailView):
     model = DataColumn
     template_name = "csv_generator/partials/book_detail.html"
-
-
-
 
 
 def create_schema_form(request, dataset_id):
@@ -88,14 +83,13 @@ def create_schema_form(request, dataset_id):
     return render(request, "csv_generator/partials/book_form.html", context)
 
 
-
-
-
 def some_view(request):
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(
         content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename="somefilename.csv"'},
+        headers={
+            'Content-Disposition': 'attachment; filename="somefilename.csv"'
+        },
     )
 
     # The data is hard-coded here, but you could load it from a database or

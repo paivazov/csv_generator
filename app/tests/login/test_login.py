@@ -9,13 +9,10 @@ class AuthenticationTestCase(TestCase):
         self.username = "testUser"
         self.user_email = "testUser@mail.com"
         self.user_password = "test"
-        user = User.objects.create_user(
+        User.objects.create_user(
             self.username, self.user_email, self.user_password
         )
-        self.creds = {
-            "username": "testUser",
-            "password": "test"
-        }
+        self.creds = {"username": "testUser", "password": "test"}
 
     def test_login_with_valid_credentials_should_be_successful(self):
         """Tests auth/login/ endpoint with correct data"""

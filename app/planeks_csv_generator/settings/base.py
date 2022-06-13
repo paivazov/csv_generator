@@ -132,7 +132,6 @@ STATIC_URL = 'app/static/'
 
 STATICFILES_DIRS = [
     "static/",
-
 ]
 
 # Default primary key field type

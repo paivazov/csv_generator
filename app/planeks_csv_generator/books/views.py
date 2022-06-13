@@ -1,5 +1,6 @@
 from django.http.response import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
+
 from planeks_csv_generator.books.forms import BookForm
 from planeks_csv_generator.books.models import Author, Book
 
@@ -16,15 +17,11 @@ def create_book(request, pk):
             book.save()
             return redirect("detail-book", pk=book.id)
         else:
-            return render(request, "book/partials/book_form.html", context={
-                "form": form
-            })
+            return render(
+                request, "book/partials/book_form.html", context={"form": form}
+            )
 
-    context = {
-        "form": form,
-        "author": author,
-        "books": books
-    }
+    context = {"form": form, "author": author, "books": books}
 
     return render(request, "book/create_book.html", context)
 
@@ -38,10 +35,7 @@ def update_book(request, pk):
             form.save()
             return redirect("detail-book", pk=book.id)
 
-    context = {
-        "form": form,
-        "book": book
-    }
+    context = {"form": form, "book": book}
 
     return render(request, "book/partials/book_form.html", context)
 
@@ -62,15 +56,11 @@ def delete_book(request, pk):
 
 def detail_book(request, pk):
     book = get_object_or_404(Book, id=pk)
-    context = {
-        "book": book
-    }
+    context = {"book": book}
     return render(request, "book/partials/book_detail.html", context)
 
 
 def create_book_form(request):
     form = BookForm()
-    context = {
-        "form": form
-    }
+    context = {"form": form}
     return render(request, "book/partials/book_form.html", context)

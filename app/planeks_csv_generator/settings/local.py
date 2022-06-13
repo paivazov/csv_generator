@@ -11,4 +11,4 @@ DATABASES = {
     ),
 }
 
-STATIC_ROOT = Path(BASE_DIR).parent.joinpath('var', 'static')
+STATIC_ROOT = Path(BASE_DIR).parent.joinpath('var', 'static')  # noqa: F405

@@ -1,14 +1,16 @@
 from django.contrib.auth import get_user_model
-from django.db.models import Model, CharField, DateField, FileField, PositiveIntegerField, ForeignKey, CASCADE, \
-    DO_NOTHING, OneToOneField, EmailField, URLField, TextField, IntegerField
-
-import pathlib
-import uuid
-
-from django.conf import settings
-from django.db import models
-from django.db.models import Q
-from django.urls import reverse
+from django.db.models import (
+    Model,
+    CharField,
+    DateField,
+    PositiveIntegerField,
+    ForeignKey,
+    CASCADE,
+    EmailField,
+    URLField,
+    TextField,
+    IntegerField,
+)
 
 User = get_user_model()
 
@@ -53,8 +55,12 @@ STRING_CHARACTER_CHOICES = (
 
 class DataSet(Model):
     name = CharField(max_length=120, blank=False, verbose_name="Data set name")
-    line_separator = CharField(max_length=64, choices=LINE_SEPARATOR_CHOICES, default=",")
-    string_character = CharField(max_length=64, choices=STRING_CHARACTER_CHOICES, default='"')
+    line_separator = CharField(
+        max_length=64, choices=LINE_SEPARATOR_CHOICES, default=","
+    )
+    string_character = CharField(
+        max_length=64, choices=STRING_CHARACTER_CHOICES, default='"'
+    )
     created_at = DateField(auto_now_add=True)
     modified_at = DateField(auto_now=True)
 
@@ -72,8 +78,3 @@ class DataColumn(Model):
 
     def __str__(self):
         return self.column_name
-
-
-
-
-
