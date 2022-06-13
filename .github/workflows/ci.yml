@@ -46,7 +46,7 @@ jobs:
           psql -c 'ALTER SYSTEM SET fsync=off;'
           psql -c 'ALTER SYSTEM SET synchronous_commit=off;'
           psql -c 'ALTER SYSTEM SET full_page_writes=off;'
-      - name: tests
+      - name: api-tests
         working-directory: ./app
         run: |
           python -m pip install --upgrade pip
@@ -54,4 +54,4 @@ jobs:
 #          make dev-requirements coverage
         env:
           DJANGODB_URL: postgres://dj_user:dj_pass123@localhost/djangodb
-          DJANGO_SETTINGS_MODULE: planeks_csv_generator.settings.local
+          DJANGO_SETTINGS_MODULE: planeks_csv_generator.settings.local_test
