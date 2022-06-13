@@ -19,4 +19,4 @@ class AuthenticationTestCase(TestCase):
         self.client.login(**self.creds)
 
         response = self.client.get(reverse("create-dataset-form"))
-        print(response.status_code)
+        self.assertEqual(response.status_code, 200)
