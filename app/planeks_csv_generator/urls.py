@@ -21,7 +21,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("planeks_csv_generator.login.urls")),
-    path("schemas/", include("planeks_csv_generator.csv_generator.urls")),
-    # path("recepies/", include("planeks_csv_generator.recipes.urls"))
-    path("", include("planeks_csv_generator.books.urls")),
+    path("datasets/", include("planeks_csv_generator.csv_generator.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
