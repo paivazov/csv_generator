@@ -5,12 +5,12 @@
         {% csrf_token %}
         {{ form|crispy }}
         {% if data_column %}
-        <button type="submit" hx-patch="{% url 'create-schema' data_column.id %}"
+        <button type="submit" hx-post="{% url 'detail-schema' dataset_id=dataset_id datacolumn_id=data_column.id %}"
                 class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Submit
         </button>
 
-        <button hx-get="{% url 'schema-detail' data_column.id %}" type="button"
+        <button hx-get="{% url 'detail-schema' dataset_id=dataset_id datacolumn_id=data_column.id %}" type="button"
                 class="ml-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Cancel
         </button>

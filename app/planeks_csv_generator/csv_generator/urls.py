@@ -1,35 +1,34 @@
 from django.urls import path
 
 from planeks_csv_generator.csv_generator.views import (
-    SchemasListView,
-    some_view,
-    ManageSchemaView,
-    create_schema_form,
+    DatasetListView,
+    DatasetDetailView,
     CreateDataSetView,
-    DetailColumnView,
+    SchemaFormCreationView,
+    SchemaFormManagingView,
 )
 
 urlpatterns = [
-    path("", SchemasListView.as_view()),
-    path("create/", some_view),
     path(
-        "create_schema/<int:pk>",
-        ManageSchemaView.as_view(),
+        "create/",
+        CreateDataSetView.as_view(),
+        name="create-dataset",
+    ),
+    path("", DatasetListView.as_view()),
+    path(
+        "<int:dataset_id>/",
+        DatasetDetailView.as_view(),
         name="create-schema",
     ),
     path(
-        "create_schema_form/<int:dataset_id>",
-        create_schema_form,
-        name="create-schema-form",
+        "<int:dataset_id>/schema_column/<int:datacolumn_id>/",
+        SchemaFormManagingView.as_view(),
+        name="detail-schema",
     ),
     path(
-        "create_dataset/",
-        CreateDataSetView.as_view(),
-        name="create-dataset-form",
+        "<int:dataset_id>/schema_column/",
+        SchemaFormCreationView.as_view(),
+        name="create-schema",
     ),
-    path(
-        "schema_detail/<int:pk>",
-        DetailColumnView.as_view(),
-        name="schema-detail",
-    ),
+    # path("create_csv/", some_view),
 ]

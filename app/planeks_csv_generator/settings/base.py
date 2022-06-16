@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'crispy_tailwind',
     "planeks_csv_generator.login",
     "planeks_csv_generator.csv_generator",
-    "planeks_csv_generator.books"
 ]
 
 MIDDLEWARE = [
@@ -129,10 +128,7 @@ USE_TZ = True
 
 STATIC_URL = 'app/static/'
 
-STATICFILES_DIRS = [
-    "static/",
-    "app/static"
-]
+STATICFILES_DIRS = ["static/", "app/static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
