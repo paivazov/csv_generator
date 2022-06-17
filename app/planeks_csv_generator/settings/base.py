@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+from os import getenv
 from typing import Collection
 from pathlib import Path
 
@@ -134,3 +135,6 @@ STATICFILES_DIRS = ["static/", "app/static"]
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = getenv('BROKER_URL', None)
+CELERY_RESULT_BACKEND = getenv('RESULT_BACKEND', None)

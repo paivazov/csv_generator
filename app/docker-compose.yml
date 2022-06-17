@@ -9,7 +9,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: make dev-server
+    command: make celery dev-server
+
     environment:
       - PYTHONPATH=/app
       # Setting the non-empty value of PYTHONUNBUFFERED means that the python

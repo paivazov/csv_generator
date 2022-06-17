@@ -6,6 +6,8 @@ from planeks_csv_generator.csv_generator.views import (
     CreateDataSetView,
     SchemaFormCreationView,
     SchemaFormManagingView,
+    CSVGenerateView,
+    DatasetGeneratingView,
 )
 
 urlpatterns = [
@@ -14,7 +16,7 @@ urlpatterns = [
         CreateDataSetView.as_view(),
         name="create-dataset",
     ),
-    path("", DatasetListView.as_view()),
+    path("", DatasetListView.as_view(), name="dataset-list"),
     path(
         "<int:dataset_id>/",
         DatasetDetailView.as_view(),
@@ -30,5 +32,11 @@ urlpatterns = [
         SchemaFormCreationView.as_view(),
         name="create-schema",
     ),
+    path(
+        "<int:dataset_id>/generate/",
+        CSVGenerateView.as_view(),
+        name="generate-csv",
+    ),
+    path("schema_action/", DatasetGeneratingView.as_view())
     # path("create_csv/", some_view),
 ]

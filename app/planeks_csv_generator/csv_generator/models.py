@@ -29,16 +29,16 @@ class ColumnType(Model):
 
 
 CHOICES = (
-    ("Full Name", "Full Name"),
-    ("Job", "Job"),
-    ("Email", "Email"),
-    ("Domain Name", "Domain Name"),
-    ("Phone Number", "Phone Number"),
-    ("Company Name", "Company Name"),
-    ("Text", "Text"),
-    ("Integer", "Integer"),
-    ("Address", "Address"),
-    ("Date", "Date"),
+    ("name", "Full Name"),
+    ("job", "Job"),
+    ("email", "Email"),
+    ("domain", "Domain Name"),
+    ("p_number", "Phone Number"),
+    ("company", "Company Name"),
+    ("text", "Text"),
+    ("int", "Integer"),
+    ("address", "Address"),
+    ("date", "Date"),
 )
 
 LINE_SEPARATOR_CHOICES = (
@@ -50,6 +50,7 @@ LINE_SEPARATOR_CHOICES = (
 STRING_CHARACTER_CHOICES = (
     ('"', 'Double-quote (")'),
     ("'", "Quote (')"),
+    ("|", "Pipe (|)"),
 )
 
 

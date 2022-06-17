@@ -30,6 +30,28 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
       - ./configs/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+#  celery:
+#    restart: always
+#    build:
+#      context: ../app
+#    command: celery -A planeks_csv_generator  worker -E --loglevel=INFO
+#    environment:
+#      - DJANGODB_URL=postgres://dj_user:dj_pass123@postgres/djangodb
+#      - BROKER_URL=redis://redis/0
+#      - RESULT_BACKEND=redis://redis/1
+#      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-api.settings.local}
+#    volumes:
+#      - ../app:/app:delegated
+#      - pip_cache:/root/.cache/pip:delegated
+#      - virtual_environment:/opt/planeks:delegated
+#    depends_on:
+#      - application
+#      - postgres
+#      - redis
   web-app:
     image: nginx:stable
     command: >

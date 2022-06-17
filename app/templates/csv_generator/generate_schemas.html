@@ -1,0 +1,16 @@
+{% extends "csv_generator/base.html" %}
+
+{% block content %}
+    <label>
+        <input type="number">
+        0
+    </label>
+    {% for dataset in object_list %}
+        <li>{{ dataset.id }}
+            {{ dataset.created_at }}
+        </li>
+{% empty %}
+    <li>No schemas to generate.</li>
+{% endfor %}
+
+{% endblock %}

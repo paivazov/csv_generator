@@ -1,0 +1,21 @@
+-r requirements.txt
+
+black==21.11b1
+coverage==6.1.2
+flake8==4.0.1
+mypy==0.910
+isort==5.10.1
+
+# dependencies of top-level packages   # needed by
+click==8.0.3                           # black
+mccabe==0.6.1                          # flake8
+mypy-extensions==0.4.3                 # black and mypy
+regex==2021.11.10                      # black
+pathspec==0.9.0                        # black
+prompt-toolkit==3.0.23                 # black
+pycodestyle==2.8.0                     # flake8
+pyflakes==2.4.0                        # flake8
+toml==0.10.2                           # black
+tomli==1.2.2                           # black
+wcwidth==0.2.5                         # black
+

@@ -42,7 +42,7 @@ test: check pytest
 coverage: test
 	$(RUNNER) coverage report
 
-.PHONY: dev-server migrate migrations
+.PHONY: dev-server migrate migrations celery
 
 ifndef DJANGO_HOST
 	DJANGO_HOST=
@@ -65,6 +65,11 @@ migrations:
 
 check_migration:
 	$(RUNNER) python local_manage.py sqlmigrate ${app} ${n}
+
+
+
+celery:
+	$(RUNNER) celery -A planeks_csv_generator  worker -E --logfile=var/portalmq.log --detach
 
 # misc.
 .PHONY: clean

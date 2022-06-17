@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import FormView, ListView
 
+from planeks_csv_generator.celery import create_csv
 from planeks_csv_generator.csv_generator.models import DataSet, DataColumn
 from planeks_csv_generator.csv_generator.forms import (  # noqa
     DataColumnForm,
@@ -145,6 +146,38 @@ class SchemaFormManagingView(LoginRequiredMixin, View):
             return get_object_or_404(DataColumn, id=datacolumn_id)
         else:
             return HttpResponseForbidden("<h2>You are not allowed</h2>")
+
+
+class DatasetGeneratingView(LoginRequiredMixin, ListView):
+    """Perform this to new template"""
+
+    template_name = "csv_generator/generate_schemas.html"
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            queryset = DataSet.objects.filter(user=user)
+            return queryset
+
+
+class CSVGenerateView(View):
+    def get(self, request, dataset_id):
+        columns = DataColumn.objects.filter(data_set_id=dataset_id).order_by(
+            "order"
+        )
+        dataset = DataSet.objects.get(id=dataset_id)
+        row_quantity = request.GET.get('rows', '10')
+        result = create_csv.delay(
+            row_quantity,
+            dataset_id,
+            request.user.id,
+            list(columns.values()),
+            dataset.line_separator,
+            dataset.string_character,
+        )
+        result.ready()
+
+        return HttpResponse()
 
 
 def some_view(request):
