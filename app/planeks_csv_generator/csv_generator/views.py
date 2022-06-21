@@ -1,17 +1,26 @@
+import os
+
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.transaction import atomic
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import (
+    HttpResponse,
+    HttpResponseForbidden,
+    HttpResponseBadRequest,
+    Http404,
+)
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.views import View
-from django.views.generic import FormView, ListView
+from django.views.generic import FormView, ListView, DeleteView
 
 from planeks_csv_generator.celery import create_csv
 from planeks_csv_generator.csv_generator.models import DataSet, DataColumn
 from planeks_csv_generator.csv_generator.forms import (  # noqa
     DataColumnForm,
     DataSetForm,
+    RowQuantityForm,
 )
 
 
@@ -24,7 +33,9 @@ class CreateDataSetView(LoginRequiredMixin, FormView):
         super().__init__(**kwargs)
 
     def get_success_url(self):
-        return reverse("create-schema", kwargs={"dataset_id": self.dataset.id})
+        return reverse(
+            "detail-dataset", kwargs={"dataset_id": self.dataset.id}
+        )
 
     def form_valid(self, form):
         data = form.cleaned_data
@@ -48,6 +59,7 @@ class DatasetListView(LoginRequiredMixin, ListView):
 
 class DatasetDetailView(LoginRequiredMixin, View):
     def get(self, request, dataset_id):
+
         columns = DataColumn.objects.filter(data_set__user=request.user)
         data_columns = DataColumn.objects.filter(data_set_id=dataset_id)
         dataset_form = DataSetForm()
@@ -58,7 +70,15 @@ class DatasetDetailView(LoginRequiredMixin, View):
             "dataset_id": dataset_id,
         }
 
-        return render(request, "csv_generator/create_schema.html", context)
+        return render(
+            request, "csv_generator/create_schema_columns.html", context
+        )
+
+
+class DatasetDeleteView(DeleteView):
+    model = DataSet
+    success_url = "/datasets/"
+    template_name = "csv_generator/delete_dataset.html"
 
 
 class SchemaFormCreationView(LoginRequiredMixin, View):
@@ -69,7 +89,7 @@ class SchemaFormCreationView(LoginRequiredMixin, View):
             "dataset_id": dataset_id,
         }
         return render(
-            request, "csv_generator/partials/book_form.html", context
+            request, "csv_generator/partials/datacoumn_form.html", context
         )
 
     def post(self, request, dataset_id):
@@ -84,7 +104,7 @@ class SchemaFormCreationView(LoginRequiredMixin, View):
             context = {"column": data_column, "dataset_id": dataset_id}
             return render(
                 request,
-                "csv_generator/partials/book_detail.html",
+                "csv_generator/partials/datacolumn_detail.html",
                 context=context,
             )
         else:
@@ -102,7 +122,7 @@ class SchemaFormManagingView(LoginRequiredMixin, View):
         context = {"column": data_column, "dataset_id": dataset_id}
         return render(
             request,
-            "csv_generator/partials/book_detail.html",
+            "csv_generator/partials/datacolumn_detail.html",
             context=context,
         )
 
@@ -130,7 +150,7 @@ class SchemaFormManagingView(LoginRequiredMixin, View):
             "dataset_id": dataset_id,
         }
         return render(
-            request, "csv_generator/partials/book_form.html", context
+            request, "csv_generator/partials/datacoumn_form.html", context
         )
 
     def delete(self, request, dataset_id, datacolumn_id):
@@ -160,43 +180,41 @@ class DatasetGeneratingView(LoginRequiredMixin, ListView):
             return queryset
 
 
-class CSVGenerateView(View):
+class DownloadView(LoginRequiredMixin, View):
     def get(self, request, dataset_id):
-        columns = DataColumn.objects.filter(data_set_id=dataset_id).order_by(
-            "order"
+        file_path = settings.CSV_FILES_ROOT.joinpath(
+            f"user_{request.user.id}", f"dataset_{dataset_id}.csv"
         )
-        dataset = DataSet.objects.get(id=dataset_id)
-        row_quantity = request.GET.get('rows', '10')
-        result = create_csv.delay(
-            row_quantity,
-            dataset_id,
-            request.user.id,
-            list(columns.values()),
-            dataset.line_separator,
-            dataset.string_character,
-        )
-        result.ready()
-
-        return HttpResponse()
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="text/csv")
+                response[
+                    'Content-Disposition'
+                ] = 'attachment; filename=' + os.path.basename(file_path)
+                return response
+        raise Http404
 
 
-def some_view(request):
-    # Create the HttpResponse object with the appropriate CSV header.
-    response = HttpResponse(
-        content_type='text/csv',
-        headers={
-            'Content-Disposition': 'attachment; filename="somefilename.csv"'
-        },
-    )
+class CSVGenerateView(LoginRequiredMixin, View):
+    def post(self, request):
+        datasets = DataSet.objects.filter(user=request.user)
 
-    # The data is hard-coded here, but you could load it from a database or
-    # some other source.
-    csv_data = (
-        ('First row', 'Foo', 'Bar', 'Baz'),
-        ('Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"),
-    )
+        form = RowQuantityForm(request.POST)
+        if not form.is_valid():
+            return HttpResponseBadRequest("<h1>Incorrect row quantity</h1>")
 
-    t = loader.get_template('csv_generator/my_template_name.txt')
-    c = {'data': csv_data}
-    response.write(t.render(c))
-    return response
+        row_quantity = form.cleaned_data["rows"]
+        for dataset in datasets:
+            columns = DataColumn.objects.filter(data_set_id=dataset).order_by(
+                "order"
+            )
+            create_csv.delay(
+                row_quantity,
+                dataset.id,
+                request.user.id,
+                list(columns.values()),
+                dataset.line_separator,
+                dataset.string_character,
+            )
+
+        return redirect("specify-csv")

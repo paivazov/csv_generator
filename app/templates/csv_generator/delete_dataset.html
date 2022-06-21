@@ -1,0 +1,27 @@
+{% extends "csv_generator/base.html" %}
+
+{% block content %}
+    <div class="container text-center">
+
+
+        <p class="h4">Are you sure you want to delete "{{ object }}"
+            dataset?</p>
+
+        <div class="row justify-content-center">
+
+            <div class="col col-1 col-sm-1">
+                <form method="post">{% csrf_token %}
+                    <input class="btn btn-success my-5" type="submit"
+                           value="Confirm">
+                </form>
+            </div>
+
+            <div class="col col-1 col-sm-1 align-self-center">
+                <a href="{% url "list-dataset" %}" class="btn btn-secondary">Cancel</a>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

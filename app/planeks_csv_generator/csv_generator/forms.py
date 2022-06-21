@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, Form, IntegerField
 
 from planeks_csv_generator.csv_generator.models import DataSet, DataColumn
 
@@ -17,3 +17,7 @@ class DataColumnForm(ModelForm):
             "column_type",
             "column_name",
         )
+
+
+class RowQuantityForm(Form):
+    rows = IntegerField(min_value=1)

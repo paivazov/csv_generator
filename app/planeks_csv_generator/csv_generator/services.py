@@ -1,3 +1,4 @@
+# type: ignore
 import csv
 import os
 
@@ -18,15 +19,15 @@ def generate_csv_schema(
 ):
     header = []
     types = []
-    filename = settings.BASE_DIR.parent.joinpath(
-        "var", "csv_files", f"user_{user_id}", f"dataset_{dataset_id}.csv"
+    filename = settings.CSV_FILES_ROOT.joinpath(
+        f"user_{user_id}", f"dataset_{dataset_id}.csv"
     )
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     for column in columns:
         header.append(column["column_name"])
         types.append(column["column_type"])
 
-    with open(filename, 'w', encoding='UTF8', newline='') as file:
+    with open(filename, 'w', encoding='UTF-8', newline='') as file:
         writer = csv.writer(file, quotechar=quotechar, delimiter=delimiter)
         writer.writerow(header)
 
@@ -35,7 +36,7 @@ def generate_csv_schema(
 
 
 def generate_fake_data(value: str):
-    # mypy is arguing on mypy, check it
+    # mypy is arguing on match/case
     match value:
         case "name":
             return fake.name()

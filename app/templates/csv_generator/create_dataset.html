@@ -1,9 +1,13 @@
 {% extends "csv_generator/base.html" %}
-{% block title %}Create DataSet {% endblock %}
-{% block content %}
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
+{% load crispy_forms_filters %}
 
+{% block title %}Create DataSet {% endblock %}
+{% block header %}New Dataset{% endblock %}
+{% block content %}
+    <div class="container my-12" style="width: 50rem;">
+<form method="post">{% csrf_token %}
+    {{ form | crispy }}
+    <input class="btn btn-success my-3" type="submit" value="Save">
+</form>
+</div>
 {% endblock %}

@@ -42,15 +42,15 @@ CHOICES = (
 )
 
 LINE_SEPARATOR_CHOICES = (
-    (",", "Comma (,)"),
-    (";", "Semicolon (;)"),
-    ("\t", r"tab (\t)"),
+    (",", "Comma ( , )"),
+    (";", "Semicolon ( ; )"),
+    ("\t", r"tab ( \t )"),
 )
 
 STRING_CHARACTER_CHOICES = (
-    ('"', 'Double-quote (")'),
-    ("'", "Quote (')"),
-    ("|", "Pipe (|)"),
+    ('"', 'Double-quote ( " )'),
+    ("'", "Quote ( ' )"),
+    ("|", "Pipe ( | )"),
 )
 
 

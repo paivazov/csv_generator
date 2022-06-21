@@ -69,7 +69,8 @@ check_migration:
 
 
 celery:
-	$(RUNNER) celery -A planeks_csv_generator  worker -E --logfile=var/portalmq.log --detach
+	$(RUNNER) celery -A planeks_csv_generator worker -E --logfile=var/portalmq.log --detach
+	$(RUNNER) celery -A planeks_csv_generator beat -s /var/celerybeat-schedule --detach
 
 # misc.
 .PHONY: clean
