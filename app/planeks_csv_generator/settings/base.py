@@ -129,7 +129,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = ["static/", "app/static/", "var/static/"]
+STATICFILES_DIRS = ["static/", "app/static/", ]
 
 STATIC_ROOT = "/root/csv_generator/app/var/static/"
 
