@@ -54,11 +54,11 @@ services:
 #      - redis
   web-app:
     image: nginx:stable
-    command: >
-      bash chmod +x -c '/usr/sbin/wait-for-it --timeout=0 application:8000 &&
-        /usr/sbin/wait-for-it --timeout=0 postgres:5432 &&
-        /usr/sbin/nginx -g "daemon off;error_log /dev/stdout info;"
-      '
+#    command: >
+#      bash -c '/usr/sbin/wait-for-it.sh --timeout=0 application:8000 &&
+#        /usr/sbin/wait-for-it --timeout=0 postgres:5432 &&
+#        /usr/sbin/nginx -g "daemon off;error_log /dev/stdout info;"
+#      '
     ports:
       - "80:80"
     volumes:
