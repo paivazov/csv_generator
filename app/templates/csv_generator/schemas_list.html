@@ -1,10 +1,61 @@
 {% extends "csv_generator/base.html" %}
 
+
+
+{% block header %}Data Sets{% endblock %}
 {% block content %}
-{% for schema in object_list %}
-        <li>{{ schema.name }}</li>
-{% empty %}
-    <li>No schemas yet.</li>
-{% endfor %}
+    <style>
+        .navigation-link {
+            padding: 1px 3px;
+            word-wrap: normal;
+            display: inline-block;
+        }
+    </style>
+
+
+
+    <div class="d-flex justify-content-end my-3">
+        <form action="{% url "create-dataset" %}">
+            <input type="submit" class="btn btn-success" value="New Schema"/>
+        </form>
+    </div>
+
+    <table class="table">
+
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Modified</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+
+        {% for schema in object_list %}
+
+
+            <tbody>
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ schema.name }}</td>
+                <td>{{ schema.modified_at }}</td>
+                <td>
+                    <a class="link-primary navigation-link"
+                       href="{% url "detail-dataset" dataset_id=schema.id %}">Edit
+                        scheme</a>
+                    <a class="link-danger navigation-link"
+                       data-method="delete"
+                       href="{% url "delete" schema.id %}">Delete scheme</a>
+                </td>
+            </tr>
+
+
+
+
+
+        {% empty %}
+            <th scope="row">No schemas yet</th>
+        {% endfor %}
+    </table>
 
 {% endblock %}

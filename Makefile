@@ -42,13 +42,14 @@ test_app:
 	$(DOCKER) run --rm application make quicktest
 
 
-.PHONY: check_full check check_ui check_app format_app
+.PHONY: check_full check check_ui check_app format_app do_celery
 
 check_full: check test
 
 check:  check_app
 
-
+do_celery:
+	$(DOCKER) run --rm application make celery
 
 check_app:
 	$(DOCKER) run --rm application make check

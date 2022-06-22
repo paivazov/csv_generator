@@ -18,19 +18,36 @@ class AuthenticationTestCase(TestCase):
         self.data_set = DataSet.objects.create(name="dataset", user=user)
         self.data_column = DataColumn.objects.create(
             data_set=self.data_set,
-            order=2,
+            order=4,
             column_name="fff",
-            column_type="Job",
+            column_type="p_number",
+        )
+        self.data_column = DataColumn.objects.create(
+            data_set=self.data_set,
+            order=1,
+            column_name="sfasf",
+            column_type="p_number",
+        )
+        self.data_column = DataColumn.objects.create(
+            data_set=self.data_set,
+            order=4,
+            column_name="fasdfafa",
+            column_type="p_number",
+        )
+        self.data_column = DataColumn.objects.create(
+            data_set=self.data_set,
+            order=3,
+            column_name="fasfdasgrg",
+            column_type="p_number",
         )
 
     def test_login_with_valid_credentials_should_be_successful(self):
         """Tests auth/login/ endpoint with correct data"""
         self.client.login(**self.creds)
 
-        # response = self.client.get(reverse("detail-schema"),
-        # kwargs={"dataset_id": self.data_set.id,
-        #   "datacolumn_id": self.data_column.id})
+        response = self.client.get("/datasets/test/1/")
 
+        print(response.status_code)
         # response = self.client.post(
         #     "/datasets/1/schema_column/1/", data={"sklsks": "fklfjl"}
         # )

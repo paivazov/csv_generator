@@ -1,0 +1,62 @@
+{% extends "csv_generator/base.html" %}
+
+{% block header %}Data Sets{% endblock %}
+
+{% block content %}
+
+    <form method="POST" action="{% url "generate-csv" %}"
+          href="{% url "generate-csv" %}">{% csrf_token %}
+        <div class="row justify-content-end">
+            <div class="col-4">
+                <div class="input-group mb-3" style="width: 60%;">
+
+                    <input name="rows" type="number" class="form-control"
+                           placeholder="Rows"
+                           aria-label="Rows quantity"
+                           aria-describedby="button-addon2">
+                    <button class="btn btn-outline-success" type="submit"
+                            id="button-addon2">Generate
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Modified</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+
+        {% for dataset in object_list %}
+
+
+            <tbody>
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ dataset.name }}</td>
+                <td>{{ dataset.created_at }}</td>
+                <td>
+                    <a href="{% url "download-csv" dataset.id %}">Download</a>
+                </td>
+            </tr>
+
+        {% empty %}
+            <th scope="row">No schemas yet</th>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+
+
+
+
+
+
+
