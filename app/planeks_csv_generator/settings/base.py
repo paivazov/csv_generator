@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-96u8@5duj)x3_%-w9*6af7h^p#8!hao3*8b)i^ql+v))x2k8'
 DEBUG = False
 # environment variable name for databases URL
 DJANGODB_URL = 'DJANGODB_URL'
-ALLOWED_HOSTS: Collection = []
+ALLOWED_HOSTS: Collection = ["46.101.122.108"]
 
 
 # Application definition
