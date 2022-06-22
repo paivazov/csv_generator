@@ -13,7 +13,8 @@ class LoginView(FormView):
 
     template_name = 'login/login.html'
     form_class = LoginForm
-    success_url = '/schemas/'
+    # success_url = reverse("dataset-list")
+    success_url = "/datasets/"
 
     def form_valid(self, form):
         data = form.cleaned_data
