@@ -129,7 +129,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = ["static/", "app/static"]
+STATICFILES_DIRS = ["static/", "app/static/", "app/var/static/", "var/static/"]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
