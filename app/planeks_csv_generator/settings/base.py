@@ -129,7 +129,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = ["static/", "app/static/", "app/var/static/", "var/static/"]
+STATICFILES_DIRS = ["static/", "app/static/", "var/static/"]
+
+STATIC_ROOT = "/root/csv_generator/app/var/static/"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
