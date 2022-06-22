@@ -78,5 +78,5 @@ load_data:
 # dependent containers
 visit_to_backend:
 	$(DOCKER) up -d postgres
-	$(DOCKER) run --rm api /bin/bash
+	$(DOCKER) run --rm application /bin/bash
 	$(DOCKER) stop postgres

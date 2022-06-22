@@ -18,8 +18,8 @@ services:
       # It also means that there is no partial output in a buffer in case
       # the python program fails.
       - PYTHONUNBUFFERED=1
-      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-planeks_csv_generator.settings.local}
-      - DJANGO_HOST=${DJANGO_HOST:-0.0.0.0:8000}
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-planeks_csv_generator.settings.production}
+      - DJANGO_HOST=${DJANGO_HOST:-46.101.122.108:8000}
     ports:
       - "8000:8000"
     volumes:
