@@ -1,68 +1,67 @@
-version: '3.4'
+
 
 # This config is for development purposes only
 
-volumes:
-  postgres:
+
 
 
 # @see https://docs.docker.com/compose/environment-variables/#substitute-environment-variables-in-compose-files
 
-services:
-  application:
-    build:
-      context: ../app
-    environment:
-      - DJANGODB_URL=postgres://dj_user:dj_pass123@postgres/djangodb
-    volumes:
-      - ../app:/app:delegated
-    depends_on:
-      - postgres
-  postgres:
-    image: postgres:14.1
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_DB=djangodb
-      - POSTGRES_PASSWORD=dj_pass123
-      - POSTGRES_USER=dj_user
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    volumes:
-      - postgres:/var/lib/postgresql/data
-      - ./configs/postgresql.conf:/etc/postgresql/postgresql.conf:ro
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
-#  celery:
-#    restart: always
-#    build:
-#      context: ../app
-#    command: celery -A planeks_csv_generator  worker -E --loglevel=INFO
-#    environment:
-#      - DJANGODB_URL=postgres://dj_user:dj_pass123@postgres/djangodb
-#      - BROKER_URL=redis://redis/0
-#      - RESULT_BACKEND=redis://redis/1
-#      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-api.settings.local}
-#    volumes:
-#      - ../app:/app:delegated
-#      - pip_cache:/root/.cache/pip:delegated
-#      - virtual_environment:/opt/planeks:delegated
-#    depends_on:
-#      - application
-#      - postgres
-#      - redis
-  web-app:
-    image: nginx:stable
-#    command: >
-#      bash -c '/usr/sbin/wait-for-it.sh --timeout=0 application:8000 &&
-#        /usr/sbin/wait-for-it --timeout=0 postgres:5432 &&
-#        /usr/sbin/nginx -g "daemon off;error_log /dev/stdout info;"
-#      '
-    ports:
-      - "80:80"
-    volumes:
-      - ../configs/nginx-dev.conf:/etc/nginx/conf.d/default.conf:delegated
-      - ../scripts/wait-for-it.sh:/usr/sbin/wait-for-it:delegated
-    depends_on:
-      - application
+
+application:
+  build:
+    context: ../app
+  environment:
+    - DJANGODB_URL=postgres://dj_user:dj_pass123@postgres/djangodb
+  volumes:
+    - ../app:/app:delegated
+  depends_on:
+    - postgres
+postgres:
+  image: postgres:14.1
+  ports:
+    - "5432:5432"
+  environment:
+    - POSTGRES_DB=djangodb
+    - POSTGRES_PASSWORD=dj_pass123
+    - POSTGRES_USER=dj_user
+    - POSTGRES_HOST_AUTH_METHOD=trust
+  volumes:
+    - postgres:/var/lib/postgresql/data
+    - ./configs/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+redis:
+  image: redis
+  ports:
+    - "6379:6379"
+# celery:
+#   restart: always
+#   build:
+#     context: ../app
+#   command: celery -A planeks_csv_generator  worker -E --loglevel=INFO
+#   environment:
+#     - DJANGODB_URL=postgres://dj_user:dj_pass123@postgres/djangodb
+#     - BROKER_URL=redis://redis/0
+#     - RESULT_BACKEND=redis://redis/1
+#     - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-api.settings.local}
+#   volumes:
+#     - ../app:/app:delegated
+#     - pip_cache:/root/.cache/pip:delegated
+#     - virtual_environment:/opt/planeks:delegated
+#   depends_on:
+#     - application
+#     - postgres
+#     - redis
+web-app:
+  image: nginx:stable
+#   command: >
+#     bash -c '/usr/sbin/wait-for-it.sh --timeout=0 application:8000 &&
+#       /usr/sbin/wait-for-it --timeout=0 postgres:5432 &&
+#       /usr/sbin/nginx -g "daemon off;error_log /dev/stdout info;"
+#     '
+  ports:
+    - "80:80"
+  volumes:
+    - ../configs/nginx-dev.conf:/etc/nginx/conf.d/default.conf:delegated
+    - ../scripts/wait-for-it.sh:/usr/sbin/wait-for-it:delegated
+  depends_on:
+    - application
